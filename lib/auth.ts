@@ -1,6 +1,6 @@
-import { betterAuth } from 'better-auth/minimal';
+import { betterAuth } from 'better-auth';
 import { nextCookies } from 'better-auth/next-js';
-import { lastLoginMethod } from 'better-auth/plugins';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import {
   user,
   session,
@@ -17,7 +17,6 @@ import {
   stream,
   lookout,
 } from '@/lib/db/schema';
-import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from '@/lib/db';
 import { config } from 'dotenv';
 
@@ -58,7 +57,6 @@ export const auth = betterAuth({
     // },
   },
   plugins: [
-    lastLoginMethod(),
     nextCookies(),
   ],
   trustedOrigins: ['http://localhost:3000'],

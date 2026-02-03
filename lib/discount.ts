@@ -1,5 +1,3 @@
-import { get } from '@vercel/edge-config';
-
 export interface DiscountConfig {
   enabled: boolean;
   message?: string;
@@ -51,22 +49,8 @@ export async function getDiscountConfig(userEmail?: string, isIndianUser?: boole
     return defaultConfig;
   }
 
-  // Fetch student domains from Edge Config
-  let studentDomains: string[] = [];
-  try {
-    const studentDomainsConfig = await get('student_domains');
-    if (studentDomainsConfig && typeof studentDomainsConfig === 'string') {
-      // Parse CSV string to array, trim whitespace
-      studentDomains = studentDomainsConfig
-        .split(',')
-        .map((domain) => domain.trim())
-        .filter((domain) => domain.length > 0);
-    }
-  } catch (error) {
-    console.warn('Failed to fetch student domains from Edge Config:', error);
-    // Fallback to hardcoded domains
-    studentDomains = ['.edu', '.ac.in', '.edu.in'];
-  }
+  // Hardcoded student domains - add your own or use a config service
+  const studentDomains: string[] = ['.edu', '.ac.in', '.edu.in'];
 
   // Check if user is a student
   const isStudent = isStudentEmail(userEmail, studentDomains);
