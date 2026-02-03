@@ -2,7 +2,6 @@
 'use server';
 
 import { geolocation } from '@vercel/functions';
-import { serverEnv } from '@/env/server';
 import { SearchGroupId } from '@/lib/utils';
 import { UIMessage, generateText, Output } from 'ai';
 import type { ModelMessage } from 'ai';
@@ -40,11 +39,7 @@ import { db } from '@/lib/db';
 import { chat } from '@/lib/db/schema';
 import { eq, desc, ilike, and } from 'drizzle-orm';
 import { getDiscountConfig } from '@/lib/discount';
-import { get } from '@vercel/edge-config';
-import { groq } from '@ai-sdk/groq';
-import { Client } from '@upstash/qstash';
-import { experimental_generateSpeech as generateVoice } from 'ai';
-import { elevenlabs } from '@ai-sdk/elevenlabs';
+
 import { usageCountCache, createMessageCountKey, createExtremeCountKey } from '@/lib/performance-cache';
 import { CronExpressionParser } from 'cron-parser';
 import { getComprehensiveUserData, getLightweightUserAuth, getCachedUserPreferencesByUserId, clearUserPreferencesCache, type ComprehensiveUserData } from '@/lib/user-data-server';
@@ -289,15 +284,12 @@ Output requirements:
   }
 }
 
-export async function generateSpeech(text: string) {
-  const result = await generateVoice({
-    model: elevenlabs.speech('eleven_v3'),
-    text,
-    voice: 'TX3LPaxmHKxFdv7VOQHJ',
-  });
-
+export async function generateSpeech(_text: string) {
+  // Stub speech generation - add your own TTS service implementation
+  console.log('Speech generation not configured');
   return {
-    audio: `data:audio/mp3;base64,${result.audio.base64}`,
+    audio: '',
+    error: 'Speech generation service not configured',
   };
 }
 
@@ -2859,8 +2851,16 @@ export async function getDodoSubscriptionExpirationDate() {
   return userData?.dodoSubscription?.expiresAt || null;
 }
 
-// Initialize QStash client
-const qstash = new Client({ token: serverEnv.QSTASH_TOKEN });
+// Stub QStash client - add your own queue/scheduling service
+const qstash = {
+  publish: async (_opts: any) => ({ messageId: 'stub' }),
+  schedules: {
+    create: async (_opts: any) => ({ scheduleId: 'stub' }),
+    pause: async (_opts: any) => {},
+    resume: async (_opts: any) => {},
+    delete: async (_id: string) => {},
+  },
+};
 
 // Helper function to convert frequency to cron schedule with timezone
 function frequencyToCron(frequency: string, time: string, timezone: string, dayOfWeek?: string): string {

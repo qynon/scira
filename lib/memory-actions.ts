@@ -1,13 +1,6 @@
 'use server';
 
 import { getUser } from '@/lib/auth-utils';
-import { serverEnv } from '@/env/server';
-import { Supermemory } from 'supermemory';
-
-// Initialize the memory client with API key
-const supermemoryClient = new Supermemory({
-  apiKey: serverEnv.SUPERMEMORY_API_KEY,
-});
 
 // Define the types based on actual API responses
 export interface MemoryItem {
@@ -38,11 +31,12 @@ export interface MemoryResponse {
   memories: MemoryItem[];
   total: number;
 }
+
 /**
  * Search memories for the authenticated user
- * Returns a consistent MemoryResponse format with memories array and total count
+ * Stub implementation - add your own memory service
  */
-export async function searchMemories(query: string, page = 1, pageSize = 20): Promise<MemoryResponse> {
+export async function searchMemories(query: string, _page = 1, _pageSize = 20): Promise<MemoryResponse> {
   const user = await getUser();
 
   if (!user) {
@@ -53,51 +47,29 @@ export async function searchMemories(query: string, page = 1, pageSize = 20): Pr
     return { memories: [], total: 0 };
   }
 
-  try {
-    const result = await supermemoryClient.search.memories({
-      q: query,
-      containerTag: user.id,
-      limit: pageSize,
-    });
-
-    return { memories: [], total: result.total || 0 };
-  } catch (error) {
-    console.error('Error searching memories:', error);
-    throw error;
-  }
+  // Add your memory service implementation here
+  console.log('Memory search not configured for query:', query);
+  return { memories: [], total: 0 };
 }
 
 /**
  * Get all memories for the authenticated user
- * Returns a consistent MemoryResponse format with memories array and total count
+ * Stub implementation - add your own memory service
  */
-export async function getAllMemories(page = 1, pageSize = 20): Promise<MemoryResponse> {
+export async function getAllMemories(_page = 1, _pageSize = 20): Promise<MemoryResponse> {
   const user = await getUser();
 
   if (!user) {
     throw new Error('Authentication required');
   }
 
-  try {
-    const result = await supermemoryClient.memories.list({
-      containerTags: [user.id],
-      page: page,
-      limit: pageSize,
-      includeContent: true,
-    });
-
-    return {
-      memories: result.memories as any,
-      total: result.pagination.totalItems || 0,
-    };
-  } catch (error) {
-    console.error('Error fetching memories:', error);
-    throw error;
-  }
+  // Add your memory service implementation here
+  return { memories: [], total: 0 };
 }
 
 /**
  * Delete a memory by ID
+ * Stub implementation - add your own memory service
  */
 export async function deleteMemory(memoryId: string) {
   const user = await getUser();
@@ -106,11 +78,7 @@ export async function deleteMemory(memoryId: string) {
     throw new Error('Authentication required');
   }
 
-  try {
-    const data = await supermemoryClient.memories.delete(memoryId);
-    return data;
-  } catch (error) {
-    console.error('Error deleting memory:', error);
-    throw error;
-  }
+  // Add your memory service implementation here
+  console.log('Memory deletion not configured for id:', memoryId);
+  return { success: false, error: 'Memory service not configured' };
 }

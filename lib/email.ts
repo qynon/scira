@@ -1,8 +1,4 @@
-import { Resend } from 'resend';
-import { serverEnv } from '@/env/server';
-import SearchCompletedEmail from '@/components/emails/lookout-completed';
-
-const resend = new Resend(serverEnv.RESEND_API_KEY);
+// Stub email service - add your own implementation (e.g., Resend, SendGrid, etc.)
 
 interface SendLookoutCompletionEmailParams {
   to: string;
@@ -17,25 +13,7 @@ export async function sendLookoutCompletionEmail({
   assistantResponse,
   chatId,
 }: SendLookoutCompletionEmailParams) {
-  try {
-    const data = await resend.emails.send({
-      from: 'Scira AI <noreply@scira.ai>',
-      to: [to],
-      subject: `Lookout Complete: ${chatTitle}`,
-      react: SearchCompletedEmail({
-        chatTitle,
-        assistantResponse,
-        chatId,
-      }),
-    });
-
-    console.log('✅ Lookout completion email sent successfully:', data.data?.id);
-    return { success: true, id: data.data?.id };
-  } catch (error) {
-    console.error('❌ Failed to send lookout completion email:', error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-    };
-  }
+  // Add your email provider implementation here
+  console.log('Email sending is not configured. Would send to:', to, 'Chat:', chatTitle, chatId, assistantResponse);
+  return { success: false, error: 'Email service not configured' };
 }

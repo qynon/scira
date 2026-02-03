@@ -1,13 +1,12 @@
-import { Ratelimit } from '@upstash/ratelimit';
-import { Redis } from '@upstash/redis';
-
-// Create a new ratelimiter that allows 3 requests per day for unauthenticated users
-export const unauthenticatedRateLimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(3, '7 d'), // 3 requests per 1 day
-  analytics: true,
-  prefix: '@upstash/ratelimit:unauth',
-});
+// Stub rate limiter - add your own implementation
+export const unauthenticatedRateLimit = {
+  limit: async (_identifier: string) => ({
+    success: true,
+    limit: 100,
+    reset: Date.now() + 86400000,
+    remaining: 100,
+  }),
+};
 
 // Helper function to get IP address from request
 export function getClientIdentifier(req: Request): string {

@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { elevenlabs } from '@ai-sdk/elevenlabs';
-import { groq } from '@ai-sdk/groq';
-import { experimental_transcribe as transcribe } from 'ai';
-
+// Stub transcription endpoint - add your own transcription service
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -13,14 +10,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No audio file found in form data.' }, { status: 400 });
     }
 
-    const result = await transcribe({
-      model: elevenlabs.transcription('scribe_v1'),
-      audio: await audio.arrayBuffer(),
-    });
-
-    console.log(result);
-
-    return NextResponse.json({ text: result.text });
+    // Add your transcription service implementation here
+    // Example: OpenAI Whisper, Google Speech-to-Text, etc.
+    console.log('Transcription service not configured');
+    
+    return NextResponse.json({ 
+      error: 'Transcription service not configured',
+      text: '' 
+    }, { status: 501 });
   } catch (error) {
     console.error('Error processing transcription request:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

@@ -17,7 +17,7 @@ import {
   stepCountIs,
   JsonToSseTransformStream,
 } from 'ai';
-import { createMemoryTools } from '@/lib/tools/supermemory';
+import { createMemoryTools } from '@/lib/tools';
 import {
   scira,
   requiresAuthentication,
@@ -63,22 +63,23 @@ import {
   coinOhlcTool,
   datetimeTool,
   greetingTool,
-  // mcpSearchTool,
   redditSearchTool,
   extremeSearchTool,
   createConnectorsSearchTool,
   codeContextTool,
 } from '@/lib/tools';
-import { GroqProviderOptions } from '@ai-sdk/groq';
 import { markdownJoinerTransform } from '@/lib/parser';
 import { ChatMessage } from '@/lib/types';
-import { OpenAIResponsesProviderOptions } from '@ai-sdk/openai';
-import { AnthropicProviderOptions } from '@ai-sdk/anthropic';
 import { getCachedCustomInstructionsByUserId, getCachedUserPreferencesByUserId } from '@/lib/user-data-server';
-import { GoogleGenerativeAIProviderOptions } from '@ai-sdk/google';
 import { unauthenticatedRateLimit, getClientIdentifier } from '@/lib/rate-limit';
-import { CohereChatModelOptions } from '@ai-sdk/cohere';
-import { XaiProviderOptions } from '@ai-sdk/xai';
+
+// Provider options types - stub definitions
+type GroqProviderOptions = Record<string, any>;
+type OpenAIResponsesProviderOptions = Record<string, any>;
+type AnthropicProviderOptions = Record<string, any>;
+type GoogleGenerativeAIProviderOptions = Record<string, any>;
+type CohereChatModelOptions = Record<string, any>;
+type XaiProviderOptions = Record<string, any>;
 
 let globalStreamContext: ResumableStreamContext | null = null;
 

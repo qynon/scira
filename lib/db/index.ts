@@ -1,48 +1,25 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { withReplicas } from 'drizzle-orm/pg-core';
-import { serverEnv } from '@/env/server';
-import { RedisDrizzleCache } from '@databuddy/cache';
-import Redis from 'ioredis';
 import * as schema from './schema';
 import { Pool } from 'pg';
 
-// Create Redis client
-const redis = new Redis(serverEnv.REDIS_URL);
-
-// Create shared cache instance
-const cache = new RedisDrizzleCache({
-  redis,
-  defaultTtl: 20,
-  strategy: 'explicit',
-  namespace: 'scira:drizzle',
-});
+// Stub cache - add your own caching implementation (e.g., Redis, Upstash)
+const cache = {
+  invalidate: (_opts: any) => {},
+};
 
 export const maindb = drizzle({
   client: new Pool({
-    connectionString: serverEnv.DATABASE_URL,
-    ssl: true,
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.NODE_ENV === 'production',
   }),
   schema,
-  cache,
 });
 
-const dbread1 = drizzle({
-  client: new Pool({
-    connectionString: process.env.READ_DB_1,
-    ssl: true,
-  }),
-  schema,
-  cache,
-});
-
-const dbread2 = drizzle({
-  client: new Pool({
-    connectionString: process.env.READ_DB_2,
-    ssl: true,
-  }),
-  schema,
-  cache,
-});
+// For simplicity, use maindb for read replicas too
+// Add your own read replica configuration here
+const dbread1 = maindb;
+const dbread2 = maindb;
 
 const REPLICA_WEIGHTS = [4, 6];
 let currentIndex = -1;
